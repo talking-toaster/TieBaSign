@@ -27,8 +27,22 @@
 
 ![查看Action](/img/check.png)
 
-START!!
-retry
+```markdown
+github actions schedule
+
+┌───────────── minute (0 - 59)
+│ ┌───────────── hour (0 - 23)
+│ │ ┌───────────── day of the month (1 - 31)
+│ │ │ ┌───────────── month (1 - 12 or JAN-DEC)
+│ │ │ │ ┌───────────── day of the week (0 - 6 or SUN-SAT)
+│ │ │ │ │
+│ │ │ │ │
+│ │ │ │ │
+* * * * *
+
+e.g.
+0 10 * * *   runs at minute 0 of the 10th hour of every day.
+```
 
 
 
