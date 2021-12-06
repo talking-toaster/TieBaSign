@@ -42,6 +42,7 @@ github actions schedule
 
 e.g.
 0 10 * * *   runs at minute 0 of the 10th hour of every day.
+Pay attention: this time is UTC
 ```
 
 
