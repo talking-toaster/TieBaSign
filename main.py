@@ -63,7 +63,7 @@ def get_tbs(bduss):
 def get_favorite(bduss):
     logger.info("获取关注的贴吧开始")
     # 客户端关注的贴吧
-    returnData = {}
+    return_data = {}
     i = 1
     data = {
         'BDUSS': bduss,
@@ -79,21 +79,21 @@ def get_favorite(bduss):
         'timestamp': str(int(time.time())),
         'vcode_tag': '11',
     }
-    data = encodeData(data)
+    data = encode_data(data)
     try:
         res = s.post(url=LIKIE_URL, data=data, timeout=5).json()
     except Exception as e:
         logger.error("获取关注的贴吧出错" + e)
         return []
-    returnData = res
-    if 'forum_list' not in returnData:
-        returnData['forum_list'] = []
-    if res['forum_list'] == []:
+    return_data = res
+    if 'forum_list' not in return_data:
+        return_data['forum_list'] = []
+    if not res['forum_list']:
         return {'gconforum': [], 'non-gconforum': []}
-    if 'non-gconforum' not in returnData['forum_list']:
-        returnData['forum_list']['non-gconforum'] = []
-    if 'gconforum' not in returnData['forum_list']:
-        returnData['forum_list']['gconforum'] = []
+    if 'non-gconforum' not in return_data['forum_list']:
+        return_data['forum_list']['non-gconforum'] = []
+    if 'gconforum' not in return_data['forum_list']:
+        return_data['forum_list']['gconforum'] = []
     while 'has_more' in res and res['has_more'] == '1':
         i = i + 1
         data = {
@@ -110,7 +110,7 @@ def get_favorite(bduss):
             'timestamp': str(int(time.time())),
             'vcode_tag': '11',
         }
-        data = encodeData(data)
+        data = encode_data(data)
         try:
             res = s.post(url=LIKIE_URL, data=data, timeout=5).json()
         except Exception as e:
@@ -119,12 +119,12 @@ def get_favorite(bduss):
         if 'forum_list' not in res:
             continue
         if 'non-gconforum' in res['forum_list']:
-            returnData['forum_list']['non-gconforum'].append(res['forum_list']['non-gconforum'])
+            return_data['forum_list']['non-gconforum'].append(res['forum_list']['non-gconforum'])
         if 'gconforum' in res['forum_list']:
-            returnData['forum_list']['gconforum'].append(res['forum_list']['gconforum'])
+            return_data['forum_list']['gconforum'].append(res['forum_list']['gconforum'])
 
     t = []
-    for i in returnData['forum_list']['non-gconforum']:
+    for i in return_data['forum_list']['non-gconforum']:
         if isinstance(i, list):
             for j in i:
                 if isinstance(j, list):
@@ -134,7 +134,7 @@ def get_favorite(bduss):
                     t.append(j)
         else:
             t.append(i)
-    for i in returnData['forum_list']['gconforum']:
+    for i in return_data['forum_list']['gconforum']:
         if isinstance(i, list):
             for j in i:
                 if isinstance(j, list):
@@ -148,7 +148,7 @@ def get_favorite(bduss):
     return t
 
 
-def encodeData(data):
+def encode_data(data):
     s = EMPTY_STR
     keys = data.keys()
     for i in sorted(keys):
@@ -163,7 +163,7 @@ def client_sign(bduss, tbs, fid, kw):
     logger.info("开始签到贴吧：" + kw)
     data = copy.copy(SIGN_DATA)
     data.update({BDUSS: bduss, FID: fid, KW: kw, TBS: tbs, TIMESTAMP: str(int(time.time()))})
-    data = encodeData(data)
+    data = encode_data(data)
     res = s.post(url=SIGN_URL, data=data, timeout=5).json()
     return res
 
@@ -171,7 +171,7 @@ def client_sign(bduss, tbs, fid, kw):
 def main():
     b = os.environ['BDUSS'].split('#')
     for n, i in enumerate(b):
-        if(len(i) <= 0):
+        if len(i) <= 0:
             logger.info("未检测到BDUSS")
             continue
         logger.info("开始签到第" + str(n) + "个用户" + i)
