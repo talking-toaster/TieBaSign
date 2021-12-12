@@ -157,10 +157,15 @@ def encode_data(data):
     data.update({SIGN: str(sign)})
     return data
 
+favorites_num=0
+cur_sign_num=0
 
 def client_sign(bduss, tbs, fid, kw):
     # 客户端签到
-    logger.info("开始签到贴吧：" + kw)
+    global cur_sign_num
+    cur_sign_num += 1
+    logger.info(f"开始签到贴吧： {cur_sign_num}/{favorites_num}")
+    #logger.info("开始签到贴吧：" + kw)
     data = copy.copy(SIGN_DATA)
     data.update({BDUSS: bduss, FID: fid, KW: kw, TBS: tbs, TIMESTAMP: str(int(time.time()))})
     data = encode_data(data)
@@ -177,8 +182,10 @@ def main():
         logger.info("开始签到第" + str(n) + "个用户" + i)
         tbs = get_tbs(i)
         favorites = get_favorite(i)
+        global favorites_num
+        favorites_num = len(favorites)
         for j in favorites:
-            time.sleep(random.randint(1,5))
+            time.sleep(random.randint(3,8))
             client_sign(i, tbs, j["id"], j["name"])
         logger.info("完成第" + str(n) + "个用户签到")
     logger.info("所有用户签到结束")
