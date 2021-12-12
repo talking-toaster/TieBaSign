@@ -176,18 +176,25 @@ def client_sign(bduss, tbs, fid, kw):
 def main():
     b = os.environ['BDUSS'].split('#')
     for n, i in enumerate(b):
-        if len(i) <= 0:
-            logger.info("未检测到BDUSS")
-            continue
-        logger.info("开始签到第" + str(n) + "个用户")
-        tbs = get_tbs(i)
-        favorites = get_favorite(i)
-        global favorites_num
-        favorites_num = len(favorites)
-        for j in favorites:
-            time.sleep(random.randint(3,8))
-            client_sign(i, tbs, j["id"], j["name"])
-        logger.info("完成第" + str(n) + "个用户签到")
+        try:
+            if len(i) <= 0:
+                logger.info("未检测到BDUSS")
+                continue
+            logger.info("开始签到第" + str(n) + "个用户")
+            tbs = get_tbs(i)
+            favorites = get_favorite(i)
+            global favorites_num
+            global cur_sign_num
+            favorites_num = len(favorites)
+            for j in favorites:
+                time.sleep(random.randint(3,8))
+                try:
+                    client_sign(i, tbs, j["id"], j["name"])
+                except:
+                    logger.info(f"签到贴吧失败： {cur_sign_num}/{favorites_num}")
+            logger.info("完成第" + str(n) + "个用户签到")
+        except:
+            logger.info("第" + str(n) + "个用户签到失败")
     logger.info("所有用户签到结束")
 
 
