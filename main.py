@@ -186,6 +186,7 @@ def main():
             global favorites_num
             global cur_sign_num
             favorites_num = len(favorites)
+            cur_sign_num=0
             for j in favorites:
                 time.sleep(random.randint(3,8))
                 try:
